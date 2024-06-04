@@ -1,0 +1,397 @@
+---
+title: "**R4DS Slack Community data**"
+description: "Data analysis of signup data from R4DS"
+author: "Anderson Neisse"
+date: "2017-12-15"
+categories: ["Statistics", "Data Science", "R4DS", "Maps", "Exploratory Analysis"]
+image: featured.png
+toc: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(fig.align = 'center')
+```
+
+Before anything else, I tried HARD to make tabsets work with `blogdown` but it doesn't offer support to tabsets at all, nor folded code chunks, sadly. That said, this post might look longer than it really is! Unless you want to read every chunk of code, then it indeed IS as long as it seems.
+
+# 1 The group
+
+The [R for Data Science](http://r4ds.had.co.nz/) book (R4DS) is a wonderfull book to introduce people both in the world of Data Science and R/RStudio. But something that improves the reading-through experience is the **R4DS Online Learning Community**. A Slack community that basically provides the means for people discuss about the book and anything that comes from that, like: sharing data sources, additional learning material, and helping each other to read it through. 
+
+I joined it in the beginning, when Jesse Maegan [\@kierisi](https://twitter.com/kierisi) invited people on Twitter. The story since then has been told in [her blog on Medium](https://medium.com/@kierisi). Now the community have had some improvements in structure (aaand some acquaintances in administration) so there can be weekly invitations. We're on the first round since these changes (the second since the beginning), if you have interest in the community don't be shy, join us! You can apply [HERE](https://docs.google.com/forms/d/e/1FAIpQLSeT3zfzjWxoaQ6RmUEdT9n0xtvkuSaMeBetDQLpzNJvGUB6IQ/viewform).
+
+And that's what this post is about, some visualizations on the signup data! We have some variables about our members that might render cool graphs and a members' world map! But first we'll have to download that data and we're going to do that from inside R! Let's dive in!
+
+# 2 The data and `googlesheets`
+
+The group's admins maintain a google sheet with unidentified data on all the members with a few variables. This post will show some visualizations of this data. However, since it's maintained in Google Drive we'll first go through a quick tutorial on the `googlesheets` package to load worksheets directly from Google Drive to R(Studio).
+
+That said, the packages we'll use in this post are the ones listed below:
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#Used packages
+library(tidyverse) #Data munging and vizualizing
+library(googlesheets4) #Loading google sheets into R
+library(plotly) #Plotting interactive graphs
+library(shiny) #Package for R-based web apps, I use it for the dev() function to align plots produced with plotly
+library(leaflet) #Ploting interactive maps
+library(ggmap) #Package for google maps. Used here to obtain coordinates based on location
+```
+
+Now, `googlesheets` uses your Google Drive account to access the worksheets that you have access to and then work from that. So the first thing to do is share the data source into your Google Drive account. The googlesheet can be accessed here: [R4DS deidentified data](https://docs.google.com/spreadsheets/d/1L7lU5QqVfUtZXenFsGErPFS4n1jL4fixx9d3lrF94hU/edit#gid=0).
+
+With the sheet in your account now it is possible to access it with `googlesheets`. The function `googlesheets::gs_ls()` will list all the sheets that you have access to. 
+
+It is worth to note that if it is the first time you are running `gs_ls()` you might have to authenticate your Google Drive Account and allow `googlesheets` to get data from your account.
+
+```{r eval=FALSE, warning = FALSE}
+#Listing the accessible google sheets
+gs_ls()
+```
+
+From the `gs_ls()` command you might have figured that the first column is the sheet's name (title). The title will be required for us to download the data. For the data the titl is "R4DS deidentified data
+
+The package `googlesheets` perform API calls to Google Drive to obtain the data from the specified sheet. Any API call depends on a set of parameters that, in this case, `googlesheets` will handle for us. The `gs_title()` function obtains the API parameters based on the worksheet's title, which we will provide.
+
+```{r, eval=FALSE, warning = FALSE}
+#Getting the API parameters for the desired google sheet
+sheet_reference <- gs_title("R4DS deidentified data", verbose = F)
+```
+
+The parameters were assigned to the `sheet_reference` variable. If everything went alright you will see a "Sheet successfully identified: 'R4DS deidentified data'" message in the prompt. Now, if you run `sheet_reference` you can see all the parameters.
+
+
+Now that you specified which google sheet you want, you may also list the sheets inside a worksheet with `gs_ws_ls()`. When the worksheet you are interested in has more than one sheet, this command will be useful for you to specify exactly which sheet you want to download. if not specified, by default the package will download the first sheet in the worksheet.
+
+```{r, eval=FALSE, warning = FALSE}
+#Listing all the sheets in our desired google sheet
+gs_ws_ls(sheet_reference)
+```
+
+For the "R4DS unidentified data" google sheet there's just one sheet named "Sheet1". Since the package downloads the first sheet by default, there is no need for us to specify it.
+
+Parameters at hand! Now we can download and have a first look at the data with `googlesheets::gs_read()` and assing it to the `dados` variable. The word "dados" is brazilian for data, thats my way of broadly naming the data while preventing conflicts with any function's "data" parameter. Consider it my nationality's contribution for this post! ;D
+
+```{r, eval=FALSE, message=FALSE, warning = FALSE}
+#Downloading the data from the google sheet
+(dados <- gs_read(ss = sheet_reference, ws = "Sheet1"))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+(dados <- read_csv("2018-01-02-r4ds-slack-group_data.csv"))
+```
+
+As we can see, `gs_read()` loaded a `tibble` with `r nrow(dados)` rows and `r ncol(dados)` columns (variables). That's it! Now we have the data in RStudio to do as we like. 
+
+We can see that the columns' names are mostly questions, not even appearing in their whole extent when the tibble is printed. 
+
+```{r, warning = FALSE}
+#original column names
+colnames(dados)
+```
+
+The reason for that is that this dataset is the result of a signup google form for the R4DS Slack Group. Google forms always include the question as the columns name for the resulting data.
+
+We can assign shorter, meningful names to each column with `colnames()` so we don't have to type as much as we would have with those large column names. We'll also change **Cohort**'s numerical values into categories so it's explicit that the variable is categorical.
+
+```{r, warning = FALSE}
+#Assigning new names
+colnames(dados) <- c("Type", "RStudio", "Stats", "Location", "Cohort", "lon", "lat")
+
+#Converting variables into categorical
+dados$Cohort <- ifelse(dados$Cohort == 1, "First", "Second")
+```
+
+**RStudio** and **Stats** are also categorical, but have to remain as numbers, for that end I converted them to `factor`. Now we can have a deeper look at the data itself!
+
+# 3 Analyzing the data
+
+Well, now that we have our data ready we can start to satiate our curiosity! (I am curious, what about you?) 
+
+As we've already seen, our dataset consists of four variables:
+
+* **Type**: Each new member is asked to chose between joining as a Learner or a Mentor.
+
+* **RStudio**: How confortable each new member were working with RStudio at the moment of registration. The scale ranges from 1 (I know nothing) to 5 (I could teach this to others).
+
+* **Stats**: How confortable the person is with Statistics and/or Data Analysis. The scale is the same as the one in **RStudio**.
+
+* **Location**: A text response where each member is asked to type thei location of residence (City, State/Province, Country).
+
+* **Cohort**: This one is a variable indicating in which invitation each member joined the community.
+
+
+When I first thought about this post I intended to plot a map based on each member's **Location**, but then having a look at those other variables I considered also having a go with them. Let's have a look at these variables and see if we see anything interesting!
+
+## 3.1 Basic distributions
+
+From now on, if you're completely new to the `tidyverse` or to R itself, things might get shadier in terms of code, but I promise the visualizations will still be worth!
+
+There are some variables that are not obligatory in the registration form for the R4DS Online Learning Community. That said, we shoul firstly have a look at `NA` values in our dataset.
+
+```{r, warning = FALSE}
+#Counting NA cases in each column
+map_dbl(dados, ~sum(is.na(.) | . == ""))
+
+#Removing rows with only NA cases
+dados <- dados %>% filter(!is.na(Type))
+```
+
+
+Well, looks like there are 3 rows with no data at all and other 4 rows with no location. I removed rows with `NA` values in every column (no data at all). I didn't remove the rows with no location because they'll still contribute with other information and we can remove them right before using the **Location** column.
+
+Now that we've already cleaned the dataset from useless rows let's have a look at each variable separately and work from that! The plot tabs below show frequency distributions for each variable. It is worth to note that each tab in the tabset will display a different code, just as it displays a different graph.
+
+##{.tabset .tabset-fade .tabset-pills}
+
+### Cohorts
+```{r fig.align='center', warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>% 
+  count(Cohort) %>%
+  mutate(Count = n, Proportion = round(n/sum(n)*100, 2)) %>%
+  ggplot(aes(Cohort, Count, labels = Proportion)) +
+  geom_bar(fill = "dodgerblue2", stat = "identity") +
+  labs(title = "Members' frequency by Cohort", y = "Frequency")
+
+#Ploting the interactive graph centralized
+div(ggplotly(plot), align = "center")
+```
+
+### Types
+```{r, warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>% 
+  count(Type) %>%
+  mutate(Count = n, Proportion = round(n/sum(n)*100, 2)) %>%
+  ggplot(aes(Type, Count, labels = Proportion)) +
+  geom_bar(fill = "dodgerblue2", stat = "identity") +
+  labs(title = "Members' frequency by Type", y = "Frequency")
+
+#Ploting the interactive graph centralized
+div(ggplotly(plot), align = "center")
+```
+
+### RStudio
+```{r, warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>% 
+  count(RStudio) %>%
+  mutate(Count = n, Proportion = round(n/sum(n)*100, 2)) %>%
+  ggplot(aes(RStudio, Count, labels = Proportion)) +
+  geom_bar(fill = "dodgerblue2", stat = "identity") +
+  labs(title = "Members' frequency by confortability with RStudio", y = "Frequency")
+
+#Ploting the interactive graph centralized
+div(ggplotly(plot), align = "center")
+```
+
+### Stats
+```{r, warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>% 
+  count(Stats) %>%
+  mutate(Count = n, Proportion = round(n/sum(n)*100, 2)) %>%
+  ggplot(aes(Stats, Count, labels = Proportion)) +
+  geom_bar(fill = "dodgerblue2", stat = "identity") +
+  labs(title = "Members' frequency by confortability with Statistics and Analysis", y = "Frequency")
+
+#Ploting the interactive graph centralized
+div(ggplotly(plot), align = "center")
+```
+
+##
+
+It is worth to note that these plots concern people who joined up, not necessarily active people. That said, the first plot shows us the frequency of each invitation (Cohort). We can also see at the **Type** frequency that there is a **`r round(sum(dados$Type == "Learner")/sum(dados$Type == "Mentor"), 1)`** Learner/Mentor ratio. 
+
+As for **RStudio**, it has mean **`r round(mean(dados$RStudio, na.rm = T), 1)`** with the frequency distribution rather stable despite not very higher frequencies around 3. Such behavior is stronger in **Stats** which has steeper increases as we approach the scale 3 from each side with a mean of **`r round(mean(as.numeric(dados$Stats), na.rm = T), 1)`**. We could say that our average member is a 3 in the comfortability both in terms of **RStudio** and **Stats**, however, in terms of **RStudio** there is more variability around 3 than **Stats**.
+
+But before any thoughts about this info we should look deeper into the data, seeing if these frequencies change based on any variable's interaction.
+
+
+## 3.2 Vizualizing Relations
+
+We've seen some basic frequency distribution, but are **RStudio**'s and **Stats**' frequency distributions equal when we plot them separately for each **Type**? 
+
+## {.tabset .tabset-fade .tabset-pills}
+
+### RStudio by Type
+```{r, warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>%
+  count(RStudio, Type) %>%
+  group_by(Type) %>%
+  mutate(Count = n, Percentage = round(n/sum(n), 4)*100) %>%
+  group_by() %>%
+  ggplot(aes(RStudio, Percentage)) +
+  geom_bar(aes(labels = Count), fill = "dodgerblue", stat = "identity")+
+  facet_wrap(~Type) +
+  labs(title = "RStudio scales frequency by Type")
+
+#Ploting the interactive graph centralized
+div(ggplotly(plot), align = "center")
+```
+
+
+### Stats by Type
+```{r, warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>%
+  count(Stats, Type) %>%
+  group_by(Type) %>%
+  mutate(Count = n, Percentage = round(n/sum(n), 4)*100) %>%
+  group_by() %>%
+  ggplot(aes(Stats, Percentage)) +
+  geom_bar(aes(labels = Count), fill = "dodgerblue", stat = "identity")+
+  facet_wrap(~Type) +
+  labs(title = "Stats scales frequency by Type")
+
+#Ploting the interactive graph centralized
+div(ggplotly(plot), align = "center")
+```
+
+### RStudio vs Stats by Type
+```{r, warning = FALSE}
+#Transforming the data and generating the plot
+plot <- dados %>%
+  count(Type, RStudio, Stats) %>%
+  group_by(Type) %>%
+  mutate(Count = n, Percentage = round(n / sum(n), 4)*100) %>%
+  group_by() %>%
+  ggplot(aes(RStudio, Stats)) +
+  geom_tile(aes(fill = Percentage, labels = Count))+
+  facet_wrap(~Type) +
+  scale_fill_viridis_c()
+
+div(ggplotly(plot), align = "center")
+```
+
+##
+
+The first two plots show us that there really are differences in frequency distributions when we look at each **Type** separately. _Mentors_ tend to choose higher scales of comfortability both in **RStudio** and **Stats**. 
+
+However, it gets better when we look at the third graph, _Learners__ are quite frequent when the scales from 1 to 3. But there are a lot of configurations with people highly comfortable in working with **RStudio**, **Stats** or both! But now have a look at the _Mentors_' plot: there are no _Mentors_ who chose scales lower than 3 in BOTH **RStudio** and **Statistics**. And when there IS a 2, the other is a 4.
+
+Well, interestingly expected pattern, right? I mean, usually, someone who takes the position of _Mentor_ does it as a result of comfortability working with at least one: **RStudio** and **Stats**. As it is possible to see in the _Mentor_'s plot, most of them are pretty comfortable with both **RStudio** and **Stats**. 
+
+I would guess that most _Mentors_ with lower scales chose this position for the challenge of improvement by helping others like I did!
+
+To explore this data and perceive these patterns is cool, but the thing is: at the end of the day, everybody always help others to find a solution and to get better, no matter if it is a _Mentor_ or a _Learner_. **That why the R4DS Online Learning community is awesome!**
+
+What about NOW we see all these awesome members scattered on a map?
+
+## 3.2 Members' World Map
+
+The best world maps are the interactive ones! We're going to need some coordinates so we can plot the map, right? But first, do you remember those **Location** rows with `NA` values? We're going to remove them now:
+
+```{r, warning = FALSE}
+#Remembering how many of them are there
+map_dbl(dados, ~sum(is.na(.)))
+
+#Removing rows with NA in Location
+mp_dt <- filter(dados, !is.na(Location))
+```
+
+And there they go, they served their purpose and now are going to Valhalla. I assigned the cleaned data to the `mp_dt` variable, which stands for "maps data".
+
+Now, the `ggmap` package provides us with the `geocode()` function, which receives a vector of locations, try to find them in Google Map's database and returns the best guesses' coordinates. We're going to pass **Location** to the function:
+
+```{r eval=FALSE, warning = FALSE}
+#Passing locations to be searched in Google Maps
+lc_dt <- geocode(tolower(mp_dt$Location), source = "google")
+
+mp_dt <- cbind(mp_dt, lc_dt)
+```
+
+It is worth to note that `ggmaps::geocode()` doesn't always return coordinates for all the locations. It happens for 2 reasons: (I) Since the locations are user-typed data, there might be incomplete data keeping `geocode()` from finding a fair enough answer; (II) At some times google will block some API calls returning "OVER_QUERY_LIMIT". 
+
+After searching for a while about the (II) issue, I found out that it happens because of an intern query limit for the Google API's Calls. This issue might be solved for some locations by running the code and storing the non-error results in a separate variable and then repeating the process to try and obtain some other locations. Like the code below.
+
+```{r eval=FALSE, warning = FALSE}
+#Run these 2 lines once
+longitude <- vector("double", length(mp_dt$Location))
+latitude <- vector("double", length(mp_dt$Location))
+
+#Run these 3 lines as much as yout think is necessary for the result you want
+lc_dt <- geocode(tolower(mp_dt$Location), source = "google")
+longitude <- ifelse(is.na(lc_dt$lon), longitude, lc_dt$lon)
+latitude <- ifelse(is.na(lc_dt$lat), latitude, lc_dt$lat)
+
+#Check how many NAs are still there
+sum(is.na(longitude)) #Count
+mean(is.na(longitude)) #Percentage
+
+#If you're satisfied with the results, bind the coordinates with the data and go on
+mp_dt <- cbind(mp_dt, longitude, latitude)
+```
+
+I didn't wrap the code in a `while()` loop to prevent infinite loops in case the errors never get to 0%, as it could happen in the (I) case.
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE}
+#write_csv(mp_dt, "mp_dt.csv")
+mp_dt <- dados
+```
+
+In one of my recent Kernels as a newbie in Kaggle ( [Terrorism Worldwide - Exploratory Analysis](https://www.kaggle.com/neisse/terrorism-worldwide-exploratory-analysis) ) I wrote a not-that-good function to plot choropleth maps using the `leaflet` package. I'm going to use that function's code and modify it a little in a way that it plots our members with labelled markers instead of countries' polygons.
+
+In order to plot a map using R, we need data concerning the map itself. The `maps::map()` function provides us with that.
+
+```{r, warning = FALSE}
+#Obtaining world map polygons
+world <- maps::map("world", fill = T, plot = F)
+
+#Creating a leaflet basic map
+m <- leaflet(world) %>% addTiles()
+```
+
+I used the `world` data to generate the basic layer with `leaflet()` and `addTiles()` from the `leaflet` package.
+
+Also, since we're intended to plot markers for each member, we could use different colors for _Mentor_ and _Learners_ to see it on the map. 
+
+```{r, warning = FALSE}
+#Creating categorical color palette
+pal <- colorFactor( RColorBrewer::brewer.pal(2, "Dark2"), 
+                   domain = mp_dt$Type, na.color = "white")
+```
+
+
+We're going to generate some variable strings to be plotted in the map with the markers, these strings are generated with `sprintf()` and strings based on the C language.
+
+```{r, warning = FALSE}
+#Generating texts
+strings <- sprintf(paste("<strong>%s</strong><br/><strong>%s</strong><br/>", 
+                         names(mp_dt[2]), ": %s<br/>",
+                         names(mp_dt[3]), ": %s<br/>",
+                         names(mp_dt[5]), ": %s"),
+                   mp_dt[[4]], mp_dt[[1]], mp_dt[[2]], mp_dt[[3]], mp_dt[[5]])
+
+#Converting it to html format
+labels <- strings %>% lapply(htmltools::HTML)
+```
+
+Now we only have to assemble all the parts in the base layer to have our map! I used `leaflet::addCircleMarkers()` to represent each member with a circle filled with colors based on **Type**. For guidance with the colors I added a legend with `leaflet::addLegend()`, and now our interactive map is complete!
+
+```{r warning=FALSE}
+
+#Adding polygon with the variable
+m %>% 
+  addCircleMarkers(lng = mp_dt$lon, 
+                      lat = mp_dt$lat, 
+                      label = ~labels, radius = 1, 
+                      color = pal(mp_dt$Type), opacity = 0.75) %>%
+  addLegend("bottomright", pal = pal, values = ~mp_dt$Type,
+  title = names(mp_dt)[1],
+  opacity = 10)
+```
+
+Every circle on the map is identified by all the varibales in the dataset! There are a lot of members on **North America** and **Europe**! **South America** and **India** come right after in the "rank".
+
+# 4 That's it!
+
+This post is the result of an "extended analysis for plotting a map out of curiosity". I hope you liked it, specially the Slack members. If you have any feedback on your mind, share it in my twitter [\@a_neisse](https://twitter.com/a_neisse) or on the Slack channel **neisse**!
+
+
+<style>
+body {
+text-align: justify}
+</style>

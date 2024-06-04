@@ -1,0 +1,14 @@
+---
+title: "Projects"
+listing:
+    contents: projects
+    sort: "date desc"
+    type: default
+    categories: cloud
+    fields: [image, title, summary]
+    page-size: 36
+page-layout: full
+toc: true
+---
+
+Here you can find some projects for fun that I get myself into every once in a while, you can also check my [Kaggle Profile](https://www.kaggle.com/neisse).

@@ -1,0 +1,16 @@
+---
+title: "Posts"
+listing:
+    contents: posts
+    sort: "date desc"
+    type: grid
+    categories: cloud
+    fields: [image, date, title, description]
+    sort-ui: true
+    filter-ui: true
+    page-size: 36
+page-layout: full
+toc: true
+---
+
+Check my posts discussing some topics of my interest. You can also check my [Kaggle Profile](https://www.kaggle.com/neisse).

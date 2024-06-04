@@ -1,0 +1,56 @@
+{
+  "index.qmd": {
+    "index.html": "848bd4cf"
+  },
+  "about.qmd": {
+    "about.html": "8a9aa0c5"
+  },
+  "blog.qmd": {
+    "blog.html": "60fbd4f0"
+  },
+  "posts/2023-10-30 - teste.qmd": {
+    "2023-10-30 - teste.html": "e8b53a20"
+  },
+  "posts.qmd": {
+    "posts.html": "c26d0427"
+  },
+  "publications.qmd": {
+    "publications.html": "f4e3a9b6"
+  },
+  "projects.qmd": {
+    "projects.html": "c9d6b78f"
+  },
+  "talks.qmd": {
+    "talks.html": "889f136c"
+  },
+  "skills.qmd": {
+    "skills.html": "64d34412"
+  },
+  "posts/2019-02-22-lyrics-scraping/2019-02-22-lyrics-scraping.qmd": {
+    "2019-02-22-lyrics-scraping.html": "3145c3ac"
+  },
+  "posts/2018-01-02-r4ds-slack-group/2017-12-15-r4ds-slack-group.qmd": {
+    "2017-12-15-r4ds-slack-group.html": "9838c10e"
+  },
+  "projects/DataSci/datasci.qmd": {
+    "datasci.html": "fdebf7da"
+  },
+  "projects/Lyrics Scraping/lyrics-scraping.qmd": {
+    "lyrics-scraping.html": "6cf2daa2"
+  },
+  "papers.qmd": {
+    "papers.html": "b5b77727"
+  },
+  "posts/2019-02-22-lyrics-scraping/index.qmd": {
+    "index.html": "f49fbe78"
+  },
+  "posts/20190222-lyrics-scraping/2019-02-22-lyrics-scraping.qmd": {
+    "2019-02-22-lyrics-scraping.html": "a47f6922"
+  },
+  "posts/20180102-r4ds-slack-group/index.qmd": {
+    "index.html": "a62b4ef6"
+  },
+  "posts/20190222-lyrics-scraping/index.qmd": {
+    "index.html": "8089c84b"
+  }
+}

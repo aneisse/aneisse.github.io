@@ -1,0 +1,1130 @@
+---
+title: "R Markdown"
+subtitle: "Introdução, aplicações e extensões"
+author: "Anderson Neisse"
+date: "Slides em: bit.ly/2ZqczbW"
+bibliography: referencias.bib
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+```
+
+# Pacotes necessários
+
+Basta rodar este código em algum script do R:
+
+```{r, eval=FALSE}
+# Pacotes necessários para o curso
+pacotes <- c("tidyverse", "rmarkdown", "blogdown", 
+             "bookdown", "tufte", "rticles", "htmlwidgets", 
+             "DT", "plotly", "leaflet", "xaringan")
+
+install.packages(pacotes)
+```
+
+---
+
+# O que é? 
+
+.pull-left[
+- Pacote que gera documentos;
+
+- Mistura:
+
+  - Códigos e resultados do R;
+  
+  - Texto: LaTeX, Markdown.
+  
+- Permite criar:
+
+  - Documentos interativos;
+  
+  - Sites (`blogdown`);
+  
+  - Dashboards (`shiny`);
+  
+  - [Muitos outros](https://rmarkdown.rstudio.com/gallery.html).
+]
+
+.pull-right[
+![image](http://hexb.in/vector/rmarkdown.svg)
+]
+
+[Markdown](https://en.wikipedia.org/wiki/Markdown) é uma linguagem para fácil escrita de documentos em HTML.
+
+---
+# Onde vive? 
+
+.pull-left[
+![image](http://hexb.in/vector/rstudio.svg)
+]
+
+.pull-right[
+- Pacote criado pelo [RStudio](https://www.rstudio.com/);
+
+
+- Lançado em 17/Set/2014;
+
+
+- Hospedagem: 
+  - CRAN;
+  
+  - [Github](https://github.com/rstudio/rmarkdown);
+  
+- [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/):
+  - Livro detalhado;
+  
+  - Autora do pacote.
+]
+
+Não é necessário o RStudio para usar o `rmarkdown`. 
+
+Mas seu uso facilita muito criação de documentos.
+
+---
+# Do que se alimeta?
+
+.pull-left[
+- Com o `knitr` mistura:
+  - Textos em Markdown;
+  
+  - Textos em LaTeX;
+  
+  - Resultados e Códigos R;
+  
+  - Também outras linguagens.
+  
+
+- Usa pandoc para gerar formatos como
+  - HTML5;
+  
+  - PDF;
+  
+  - MSOffice;
+  
+  - [E outros](https://rmarkdown.rstudio.com/formats.html).
+]
+
+.pull-right[
+![image](http://hexb.in/vector/knitr.svg)
+]
+
+[Pandoc](https://pandoc.org/) é um conversor de documentos gratuito e de código aberto.
+
+---
+
+# Em resumo:
+
+A idéia base é simples:
+  
+  - Intercalar narrativa com código em um documento;
+  
+  - "Tricotar" o documento gerando resultados a partir do código;
+
+--
+  
+Entretanto esta idéia não foi criada pelo `rmarkdown`:
+
+  - Surgiu de um paradigma de programação por Knuth (1984);
+  
+  - Termo: Programação Literal (*Literate Programming*).
+
+--
+
+Outras ferramentas também usam, como o [Jupyter Notebook](https://jupyter.org/) (Python).
+
+```{r, echo=FALSE, out.height=170, out.width=400, fig.align='center'}
+knitr::include_graphics("C:/Scripts R/aneisse/slides/rmd-tutorial/img/python-modules.png")
+```
+
+
+---
+class: inverse, center, middle
+
+# Use cases
+
+### Como R Markdown se faz útil?
+
+---
+
+# Airbnb
+
+Documentam todas as análises em R com o R Markdown. 
+ 
+Relatórios finais são revisados e mantidos em repositório de conhecimento.
+  
+```{r, out.height=180, out.width=150, echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://logodownload.org/wp-content/uploads/2016/10/Airbnb-Logo-9.png")
+```
+--
+
+
+Todas as áreas podem consultar, analisar e reproduzir resultados passados.
+
+Também permite aos Cientistas de Dados a:
+  - Aprenderem com análises anteriores;
+  
+  - Reproduzirem resultados.
+
+Mais detalhes nesse [post](https://medium.com/airbnb-engineering/using-r-packages-and-education-to-scale-data-science-at-airbnb-906faa58e12d).
+
+
+---
+
+# E-mails personalizados
+
+O R Markdown permite gerar relatórios com programação!
+
+**Mine Çetinkaya-Rundel** criou mensagens personalizadas para um Workshop.
+
+
+```{r, out.height=200, out.width=350, echo=FALSE, fig.align='center'}
+#knitr::include_graphics("https://imageog.flaticon.com/icons/png/512/60/60543.png?size=1200x630f&pad=10,10,10,10&ext=png&bg=FFFFFFFF")
+```
+
+--
+
+Ela usou um template em R Markdown dentro de um `for()` e gerou 20 PDFs.
+
+Cada um com informações individuais e comuns entre os participantes.
+
+--
+
+Detalhes técnicos de como ela fez [aqui](https://rmarkdown.rstudio.com/articles_mail_merge.html)!
+
+---
+
+# Outros
+
+### Artigos Científicos
+
+Chris Hartgerink escreveu um [post](https://elifesciences.org/labs/cad57bcf/composing-reproducible-manuscripts-using-r-markdown) explicando como gerou um artigo dinamicamente com R Markdown e muito LaTeX.
+
+--
+
+### Livros (`bookdown`)
+
+  - [R for Data Science](https://r4ds.had.co.nz/) - Introduz o R na abordagem "`tidyverse`" para análise de dados;
+  - [Advanced R](https://adv-r.hadley.nz/) - Base e conceitos avançados em R;
+  - [Text Mining with R](https://www.tidytextmining.com/) - Técnicas de extração de informação de texto.
+  
+--
+  
+### Websites (`blogdown`)
+
+Disponibiliza várias possibilidades de sites a serem criados em R Markdown.
+  
+  - [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/).
+
+---
+class: inverse, center, middle
+
+# Algumas informações prévias
+
+## `setwd()`, R Markdown e Projetos
+
+---
+# Uso de setwd
+
+Como dito pela engenheira do RStudio [@JennyBryan](https://twitter.com/JennyBryan) em uma conferência:
+
+> If the first lines of your R script is
+>
+> `setwd("C:\Users\jenny\path\that\only\I\have")`
+
+> `rm(list = ls())`
+>
+> I will come into your office and SET YOUR COMPUTER ON FIRE 🔥.
+
+--
+
+<br>
+
+Por não serem boas práticas no contexto de reprodutibilidade:
+
+- Outra pessoa precisaria alterar o caminho em `setwd()` (Você no futuro!);
+
+- A chamada `rm(list = ls())` limpa somente os **objetos do ambiente**.
+
+<br>
+
+Para scripts uma alternativa ao `setwd()` é o pacote `here`, explicado [aqui](https://github.com/jennybc/here_here).
+
+---
+## R Markdown
+
+O R Markdown resolve estes problemas:
+
+  - `setwd()`: Considera o `wd` como sendo o local aonde o arquivo .Rmd está;
+  
+  - `rm(list = ls())`: Quando compilado, é rodado em um ambiente isolado, limpo.
+
+--
+
+## Projetos
+
+Os projetos são uma solução mais geral. Criados por `File -> New Project`.
+
+Cria um arquivo **.RProj** na pasta, que isola um ambiente limpo do R.
+
+Desta forma ao trocar entre projetos, os ambientes não se misturam.
+
+O Projeto também considera o `wd` como sendo a localização do **.RProj**.
+
+---
+# Texto exemplo
+
+Texto que será utilizado para "dar corpo" a documentos de exemplo:
+
+>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+<br>
+
+Será utilizado durante o resto da aula.
+
+<br>
+
+Se quiser, salve em um **.txt** e o mantenha aberto.
+
+---
+class: inverse, center, middle
+
+# Instalação e Início
+
+---
+# Instalando
+
+
+A instalação do pacote pode ser feita da maneira tradicional:
+
+```{r eval=FALSE, tidy=FALSE}
+install.packages("rmarkdown")
+```
+
+--
+
+Ou, por meio do [Github](https://github.com/rstudio/rmarkdown):
+
+```{r, eval=FALSE, tidy=FALSE}
+install.packages("devtools")
+devtools::install_github("rstudio/rmarkdown")
+```
+
+--
+
+A segunda opção instala a versão de desenvolvedor a partir do Github.
+
+Pode trazer melhorias ainda não submetidas ao CRAN, assim como possíveis bugs.
+
+---
+
+# Criando documentos
+
+É recomendado o uso do [RStudio IDE](https://www.rstudio.com/products/rstudio/), mas não obrigatório.
+
+O **RStudio** traz muitas facilidades como atalhos e comandos de compilação.
+
+--
+
+- Crie um novo documento R Markdown no menu `File -> New File -> R Markdown`;
+  
+  - Cria um script com a estrutura já digitada.
+
+```{r, echo=FALSE, out.height=200, out.width=200, fig.align='center'}
+knitr::include_graphics("C:/Scripts R/aneisse/slides/rmd-tutorial/img/creation_frame.png")
+```
+
+--
+
+- Clique no botão `knit` para compilar o exemplo (`Ctrl + Shift + K`).
+  
+  - Roda o comando `rmarkdown::render()` em **nova sessão**;
+  
+
+---
+
+# Metadados YAML
+
+O cabeçalho de todo documento `.Rmd`.
+
+Traz as informações usadas para renderizar o documento.
+
+```{r, eval=FALSE}
+---
+title: "Documento Qualquer"
+subtitle: "Exemplo de cabeçalho YAML"
+author: "Anderson Neisse"
+date: "23/02/2019"
+output: 
+  html_document:
+    toc: true
+  pdf_document:
+    toc: false
+---
+```
+
+--
+
+YAML significa "Yet Another Markup Language".
+
+É uma linguagem que representa dados em formato de listas.
+
+Usa **identação** para identificar níveis de aninhamento.
+
+---
+# Opções de formato
+
+Existem basicamente dois tipos de R Markdown: Documento e Apresentação.
+
+Na possibilidade de mais de um formato, o botão `knit` mostrará opções:
+
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/format-dropdown.png")
+```
+
+--
+
+Basicamente, o `output` do YAML é alterado.
+
+Pacotes extendem para novos formatos, como o `tufte` e o `rticles`.
+
+O RStudio tem uma página de [Referência de Formatos](https://rmarkdown.rstudio.com/formats.html).
+
+---
+class: inverse, center, middle
+
+# Sintaxe Markdown
+
+### A implementação Pandoc
+
+---
+# Definição de Seções
+
+A criação de seções usa Markdown como base:
+
+```{r}
+# Seção
+```
+# Seção
+
+```{r}
+## Sub-seção
+```
+## Subseção
+
+...e assim por diante.
+
+--
+
+A adição de `number_sections: true` abaixo do formato do documento no YAML enumera as seções.
+
+---
+# Formatação de texto
+
+As principais funcionalidades são:
+
+  - **Negrito** usando `**Negrito**` ou `__Negrito__`;
+  
+  - *Itálico* usando `*Itálico*` ou `_Itálico_`;
+  
+  - ~~Cortado~~ usando `~~Cortado~~`;
+  
+  - Linha horizontal: "---" 
+  ---
+
+O RStudio tem documento de [referência de R Markdown](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf).
+
+---
+# Listas
+
+Podemos criar listas com `-`, `+` ou `*`:
+
+```{r, eval=FALSE}
+  - Item 
+    - Subitem
+  - Outro item
+```
+
+  - Item 
+    - Subitem
+  - Outro item
+
+--
+
+Ou listas ordenadas com `1., 2., ...`:
+
+```{r, eval=FALSE}
+  1. Item
+    + Subitem
+  2. Outro item
+```
+
+  1. Item
+    + Subitem
+  2. Outro item
+
+---
+# Equações
+
+Equações na linha podem ser escritas dentro de um par de cifrões `$` em LaTeX:
+
+`${n \choose k} p^{k} (1-p)^{n-k}$` retorna ${n \choose k} p^{k} (1-p)^{n-k}$
+
+--
+
+Equações multi-linha devem ser envolas em cifrões duplos `$$`:
+
+```{r, eval=FALSE}
+$$
+  {n \choose k} p^{k} (1-p)^{n-k}
+$$
+```
+
+retorna
+
+$${n \choose k} p^{k} (1-p)^{n-k}$$
+
+---
+
+# Tabelas
+
+Para criar manualmente, com **Markdown**:
+
+```{r, eval=FALSE}
+                  |Coluna1|Coluna2|Coluna3|
+                  |-------|:-----:|------:|
+                  |   1   |   2   |   3   |
+```
+
+<br>
+
+O que resulta em:
+
+|Coluna1|Coluna2|Coluna3|
+|-------|:-----:|------:|
+|   1   |   2   |   3   |
+
+<br><br>
+
+Veremos como criar tabelas mais elaboradas com `kableExtra`.
+
+---
+
+# Figuras
+
+Podemos inserir figuras locais (ou links da internet):
+
+```{r, eval=FALSE}
+![Figura](blackhole.jpg)
+```
+
+![Figura](blackhole.jpg)
+
+---
+
+# Texto em blocos e citações
+
+Texto após o operador `>` fica em um bloco:
+
+```{r, eval=FALSE}
+> "I thoroughly disapprove of duels. If a man should challenge me,
+  I would take him kindly and forgivingly by the hand and lead him
+  to a quiet place and kill him."
+>
+> --- Mark Twain
+```
+
+> "I thoroughly disapprove of duels. If a man should challenge me,
+  I would take him kindly and forgivingly by the hand and lead him
+  to a quiet place and kill him."
+>
+> --- Mark Twain
+
+--
+
+Ou blocos de código em geral com identação de quatro `tabs`/`espaços`:
+
+```{r, eval=FALSE}
+        Este texto será gerado em fonte de código
+```
+
+
+        Este texto será gerado em fonte de código.
+
+---
+class: inverse, center, middle
+
+# Códigos e Resultados em R
+### Chunks (Pedaços) de código
+---
+# Códigos R - chunks
+
+Todo código multi-linha em R deve ser inserido em *chunks* (pedaços). 
+
+```{r media, eval=FALSE}
+#Código dentro de um chunk
+mean(1:10)
+```
+
+--
+
+### Código na linha (texto dinâmico):
+  
+```{r}
+# Texto anterior `r código` texto posterior.
+```
+
+Este valor foi calculado na geração do documento com `mean(1:10)`: `r mean(1:10)`.
+
+Permite muitas possibilidades de relatórios dinâmicos.
+
+---
+# Opções dos chunks
+
+Existem opções para códigos no relatório:
+
+  - `{r, echo = FALSE}`: Não mostra o código, somente o resultado;
+```{r, echo=FALSE}
+mean(1:10)
+```
+
+  - `{r, eval = FALSE}`: Não roda o código, só o mostrando;
+```{r, eval=FALSE, }
+mean(1:10)
+```
+
+  - `include = FALSE`: Remove tanto código quanto resultados, mas roda;
+
+  - `warning = FALSE` não mostrará warnings no relatório compilado;
+  
+  - `message = FALSE` não mostrará mensagens (carregamento de pacotes).
+  
+  - [Várias outras](https://yihui.name/knitr/options/).
+
+---
+
+# Tabelas
+
+Podemos utilizar o pacote `kableExtra` para criar tabelas:
+
+```{r}
+tibble(Coluna1 = c(11, 12), Coluna2 = c(21, 22)) %>% 
+  kableExtra::kable(align = c("r", "c"), 
+                    caption = "Tabela 1: Exemplo de tabela")
+```
+
+--
+
+Existe uma vantagem quanto ao método do **Markdown** pela customização.
+
+Várias opções podem ser adicionadas, especialmente em HTML.
+
+Todas as opções para [HTML](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html) e [PDF](http://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf).
+---
+
+# Imagens
+
+Gráficos serão mostrados logo abaixo do chunk:
+
+```{r, out.width=300, out.height=300, fig.align='center'}
+plot(1:10)
+```
+
+Também podemos usar `knitr::include_graphics("caminho ou link")` para inserir figuras.
+
+---
+# Opções de Imagens
+
+Também existem opções de imagens dentro de `{r}`, como:
+
+  - `out.height` e `out.width` ou `fig.dim = c(h, w)`: Ajusta dimensões da imagem no relatório.
+  
+  - `fig.align`: Ajusta alinhamento direito, esquero, centralizado;
+
+  - `fig.cap`: Inserção de título da imagem;
+  
+```{r, echo=FALSE, out.width=125, out.height=125, fig.align='center',fig.cap="Figura 1."}
+plot(1:10)
+```
+  
+  - `fig.pos`: Equivalente a posicionamento de figuras do LaTeX;
+  
+
+Outras opções de figuras são explicadas [aqui](https://bookdown.org/yihui/rmarkdown/r-code.html#figures).
+
+---
+# Outras linguagens
+
+O RStudio faz API com outras linguagens instaladas.
+
+Pode ser inseridos códigos de outras linguagens como:
+
+  - Python: {python}, usando o pacote `reticulate`;
+  
+  - SQL: {sql}, precisa de conexão com o BD;
+  
+  - JavaScript: {js}, ajuda a formatar documentos HTML;
+  
+  - [E outras](https://bookdown.org/yihui/rmarkdown/language-engines.html#javascript-and-css).
+
+--
+
+---
+class: inverse, center, middle
+
+# Introdução a Relatórios Científicos
+
+### Alguns elementos importantes
+
+---
+
+### Abstract
+
+O R markdown permite inclusão de abstract no YAML:
+
+```{r, eval=FALSE}
+abstract: "Texto aqui"
+```
+
+--
+
+### Sumário
+
+```{r, eval=FALSE}
+lang: pt-BR
+pdf_document:
+  toc: true
+  toc_depth: 2
+```
+
+A opção `toc_depth: 2` define a profundidade de seções. E `lang: pt-BR` muda os títulos.
+
+--
+
+### Quebras de página
+
+Quebras de página podem ser inseridas com comandos LaTex `\pagebreak` ou `\newpage`.
+
+---
+
+## Referências
+
+Utilizando a opção do YAML `bibliography: referencias.bib`, pode-se utilizar a mecânica do LaTeX.
+
+Uma referência é especificada no `.bib` como:
+
+```{r, eval=FALSE}
+@book{casella,
+  title={Statistical inference},
+  author={Casella, George and Berger, Roger L},
+  volume={2},
+  year={2002},
+  publisher={Duxbury Pacific Grove, CA}
+}
+```
+
+Então, no `.Rmd`:
+  - `[@casella]` resulta em  *(Casella e Berger 2002)*;
+  - `@casella` resulta em *Casella e Berger (2002)*;
+  - `[@casella; @bortolini]` resulta *(Casella e Berger 2002; Bortolini 2015)*.
+  
+Um  [arquivo de exemplo](referencias.bib) utilizado na apresentação.
+
+---
+# Cross-Reference
+
+### A Seções
+
+Pode-se fazer referências por link a seções (PDF e HTML) da forma:
+
+```{r}
+# Nome da Seção{id}
+```
+
+Então utilizando no texto: `[texto](id)`.
+
+### Tabelas e Gráficos
+
+Podemos criar numeração automática da forma:
+
+  - Tabela: Definindo `kable(caption = "Título")`;
+  - Figura: Opção `fig.cap = "Título"` do chunk.
+  
+Definirmos uma label para o chunk `{r label}`, então podemos referenciar no texto como `\@ref(tab:label)` ou `\@ref(fig:label)`. [Mais detalhes](https://bookdown.org/yihui/bookdown/figures.html).
+
+---
+# Formatos de Artigo
+
+O R Markdown permite criar facilmente relatórios.
+
+Detalhes específicos de cada revista são mais difíceis de se realizar.
+
+Muitas revistas disponibilizam formato de artigos em Rmd.
+
+--
+
+<br>
+
+Alguns exemplos:
+
+  - UFPB: [Elaboração de TCC em R Markdown](https://repositorio.ufpb.br/jspui/bitstream/tede/9034/2/arquivototal.pdf)
+  
+  - Royal Society of Statistics (`rticles`)
+  
+  - [Journal of Statistical Software](https://rmarkdown.rstudio.com/formats.html)
+  
+
+Muitos formatos são distribuídos pelo pacote `rticles`.
+
+---
+# Diferenças PDF/HTML
+
+### Identação
+
+Em PDF usa-se o código LaTeX `\indent`.
+
+O HTML não entende alguns códigos de LaTeX, nesse caso um espaço é inserido por `&ensp;`.
+
+### Justificação
+
+Documentos gerados em PDF já justificam automaticamente.
+
+O HTML precisa do código abaixo inserido em qualquer parte do corpo:
+
+```{r, eval=FALSE}
+<style>
+body{
+text-align: justify
+}
+</style>
+```
+
+---
+class: inverse, center, middle
+
+# Funções do HTML
+
+### Interatividade, Widgets e Shiny
+
+---
+# Sumário
+
+Em HTML existem possibilidades adicionais:
+  
+  - `toc_floating: true` para um sumário fixado à esquerda;
+  
+  - `toc_collapsed: true` para aninhar os subitens, mostrando quando chegar na seção.
+
+--
+
+Naturalmente, estas opções devem estar sob o tipo de documento no YAML:
+
+```{r, eval=FALSE}
+output:
+  html_document: 
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    toc_float: true
+    toc_collapsed: false
+```
+
+---
+
+# Code-folding
+  
+Em HTML é possível permitir oferecer a opção de exibir o código.
+
+Pode ser útil para quando se quer enviar relatórios com código aberto.
+
+Introduz um "botão" para mostrar/esconder o código.
+
+--
+<br>
+
+Basta inserir:
+
+```{r, eval=FALSE}
+output:
+  html_document: 
+    code_folding: hide
+```
+
+para gerar o documento com os ódigos escondidos por padrão. A opção é `code_folding: show`.
+
+---
+
+# Tabsets (abas)
+
+Usando `{.tabset}` ao lado do nome de uma seção, da forma:
+
+    # Título da seção do Tabset{.tabset .tabset-pills}
+
+    ## Primeira visualização
+    chunk de código e/ou texto aqui
+
+    ## Segunda visualização
+    chunk de código e/ou texto aqui
+Faz com que todas as suas subseções virem abas que podem ser navegadas.
+
+```{r, echo=FALSE, fig.align='center', out.height=200}
+knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/tabset.png")
+```
+
+A opção `tabset-pills` dá um visual diferente. [Mais detalhes](https://bookdown.org/yihui/rmarkdown/html-document.html#tabbed-sections).
+
+---
+# Widgets HTML
+
+Os Widgets HTML são implementados no R pelo pacote `htmlwidgets`.
+
+O pacote usa JavaScript para criar gráficos e tabelas interativas.
+
+--
+
+Pacotes resultantes desta interface são:
+
+  - `DT`: Cria tabelas interativas com filtros e paginação;
+  
+  - `plotly`: Gráficos interativos a partir do `ggplot2`;
+  
+  - `leaflet`: Mapas dinâmicos; 
+
+--
+
+Podem ser incorporados em documentos e apresentações.
+
+Mais pacotes de Widgets HTML podem ser encontrados [aqui](https://www.htmlwidgets.org/showcase_leaflet.html).
+
+
+---
+# Widgets HTML - `DT`
+
+Para inserir data frames como Widget HTML basta inserir:
+
+```{r, warning=FALSE}
+library(DT)
+datatable(iris, options = list(pageLength = 4))
+```
+
+
+Para mais tipos de opções de formatação da tabela, [aqui](http://rstudio.github.io/DT/).
+
+---
+# Widgets HTML - `leaflet`
+
+Pacote frequentemente utilizado para criar mapas.
+
+Outra opção é o `ggmap`, extensão do `ggplot2`, [aqui](https://github.com/dkahle/ggmap).
+
+O código abaixo usa o dataset `quake` para gerar um exemplo.
+
+```{r, eval=FALSE, warning=FALSE, message=FALSE}
+library(leaflet)
+leaflet(quakes) %>% addTiles() %>% 
+  addMarkers(clusterOptions = markerClusterOptions())
+```
+
+Para mais detalhes em diferentes formas de plots em `leaflet`, [aqui](https://rpubs.com/mattdray/basic-leaflet-maps).
+
+---
+# Widgets HTML - `leaflet`
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.align='center'}
+library(leaflet)
+leaflet(quakes) %>% addTiles() %>% 
+  addMarkers(clusterOptions = markerClusterOptions())
+```
+
+---
+
+# Widgets HTML - `plotly`
+
+Pacote mais utilizado para gráficos inteativos. Possui biblioteca no python também.
+
+Gera um gráfico interativo em HTML a partir do `ggplot2`.
+
+--
+
+Deve-se gerar o gráfico no `ggplot2`:
+
+```{r}
+library(ggplot2)
+g <- ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) +
+  geom_point(aes(color = Species)) + 
+  labs(title = "Tamanho da pétala por espécie de flor", 
+       x = "Comprimento", y = "Largura", color = "Espécie") + 
+  theme_bw()
+```
+
+--
+
+Então utilizar a função `plotly::ggplotly()` no gráfico:
+
+```{r, eval=FALSE}
+library(plotly)
+ggplotly(g)
+```
+
+Mais sobre gráficos com `plotly` pode ser encontrado [aqui](https://plot.ly/r/).
+
+---
+# Widgets HTML - `plotly`
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
+library(plotly)
+ggplotly(g)
+```
+
+---
+
+## Documentos Shiny
+
+Shiny é uma biblioteca focada em criar dashboards interativos.
+
+```{r, eval=FALSE}
+---
+title: "Um Documento com Shiny"
+output:
+  html_document: default
+runtime: shiny
+---
+# Código abaixo isnerido em chunks
+selectInput(
+  'breaks', label = 'Number of bins:',
+  choices = c(10, 20, 35, 50), selected = 20)
+
+renderPlot({
+  par(mar = c(4, 4, .1, .5))
+  hist(
+    faithful$eruptions, as.numeric(input$breaks),
+    col = 'gray', border = 'white',
+    xlab = 'Duration (minutes)', main = '')
+})
+```
+
+Mais informações em [Shiny](https://shiny.rstudio.com/tutorial/) e também [Shiny com R markdown](https://bookdown.org/yihui/rmarkdown/shiny-documents.html). 
+
+---
+# Documentos Shiny
+
+O exemplo do slide anterior gera:
+
+```{r, echo=FALSE, fig.align='center', out.height=425, out.width=500}
+knitr::include_graphics("C:/Scripts R/aneisse/slides/rmd-tutorial/img/shiny.png")
+```
+
+--
+
+
+Com conexão à internet, podemos ver exemplos [na prática](https://shiny.rstudio.com/gallery/movie-explorer.html).
+
+---
+class: inverse, center, middle
+
+# Apresentações em R markdown
+
+## Xaringan e alternativas
+
+---
+
+# Apresentações
+
+Para documentos em geral, as unidades são as seções.
+
+Em apresentações elas se tornam os slides. Os formatatos disponíveis são:
+
+  - [IO Slides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html): Em HTML, definindo `output: ioslides_presentation`;
+  
+  - [Slidy](https://bookdown.org/yihui/rmarkdown/slidy-presentation.html): Também em HTML usando `output: slidy_presentation`;
+  
+  - [Beamer](https://bookdown.org/yihui/rmarkdown/beamer-presentation.html): Em PDF com `output: beamer_presentation`;
+  
+  - [PowerPoint](https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html): Com `output: powerpoint_presentation` no YAML. 
+  
+--
+<br>,
+
+O pacote `xaringan` introduz uma opção que usa [remark.js](https://remarkjs.com), uma biblioteca de JavaScript. 
+
+A criação da apresentação é feita por: `New R Markdown -> From Template -> Presentation Ninja`.
+
+Que cria um arquivo com uma apresentação pré-digitada pela autora, apresentando e dando um tutorial . [Mais informações](https://bookdown.org/yihui/rmarkdown/xaringan.html).
+
+---
+class: inverse, center, middle
+
+# Websites em R markdown
+
+### Blogdown e Ferramentas necessárias
+
+---
+## Websites em R Markdown
+
+O pacote `bookdown` introduz a criação de sites usando R markdown.
+
+O [livro do pacote](https://bookdown.org/yihui/blogdown/) propõe diversas formas. O sugerido é usar o `blogdown` em conjunto com o [GitHub](https://github.com/) e o [Netlify](https://www.netlify.com/). Basicamente:
+
+  - Escolher o [tema Hugo](https://themes.gohugo.io/) e obter o repositório do GitHub "autor/repositorio";
+  
+  - Criar projeto `Website using blogdown` fornecendo "autor/repositorio";
+  
+  - Alterar e ver resultados "aovivo" com `Addins -> Serve site`;
+  
+  - Fazer upload do seu site para um repositório do GitHub;
+  
+  - Fazer o deploy do site pelo Netlify.
+
+--
+<br>
+O GitHub permite criar versões de testes e o Netlify permite testar estas versões.
+
+Um [tutorial completo](https://gohugo.io/hosting-and-deployment/hosting-on-netlify/) utilizando esta abordagem.
+
+O Netlify gera um link aleatório, mas permite inserção de domínios comprados.
+
+---
+
+class: left
+
+# Referências
+
+- Allaire, J. J., Ushey, K., Tang, Y., Eddelbuettel, D., Lewis, B., & Geelnard, M. (2018). reticulate: interface to’Python’. R package version, 1(8).
+
+- Bion, Ricardo, Robert Chang, and Jason Goodman. "How R helps Airbnb make the most of its data." The American Statistician 72.1 (2018): 46-52.
+
+- Cheng, J., Karambelkar, B., Xie, Y., Wickham, H., Russell, K., & Johnson, K. (2018). Leaflet: create interactive web maps with the JavaScript “Leaflet” Library [Internet]. 2017.
+
+- Knuth, Donald E. 1984. “Literate Programming.” The Computer Journal 27 (2). British Computer Society: 97–111.
+
+- Wickham, Hadley. ggplot2: elegant graphics for data analysis. Springer, 2016.
+
+- Xie, Yihui, Joseph J. Allaire, and Garrett Grolemund. R markdown: The definitive guide. CRC Press, 2018. [Disponível online](https://bookdown.org/yihui/rmarkdown/).
+
+---
+
+class: center, middle
+
+# Obrigado!
+
+
+
+Apresentação criada com o pacote [**xaringan**](https://github.com/yihui/xaringan).
+
+[aneisse.com](https://aneisse.com/)
+
+Twitter: [@a_neisse](https://twitter.com/a_neisse)
+
+LinkedIn: [anderson-neisse](https://www.linkedin.com/in/anderson-neisse/)
+
+Código da apresentação no [Github](https://github.com/aneisse/tutorial-rmarkdown)

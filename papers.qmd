@@ -1,0 +1,34 @@
+---
+title: "Papers"
+---
+
+Check out my published papers in this section. You could also check them and its citations at my [**Google Scholar Profile**](https://scholar.google.com/citations?user=DD7V1NMAAAAJ&hl=en).
+
+
+# 2022
+
+ - **Inventário de ninhos de abelhas sociais sem ferrão em uma área antropizada**. JM Albernaz, CAL de Carvalho, FL Silva, AC Neisse, IP Silva, MAPC Costa, CS Machado, GS Sodré - Diversitas Journal [https://diversitas.emnuvens.com.br/diversitas_journal/article/view/1810](https://diversitas.emnuvens.com.br/diversitas_journal/article/view/1810)
+
+# 2021
+
+ - **Machine learning algorithms to predict the dry matter loss of stored soybean grains (Glycine max L.)**. JS Zeymer, F Guzzo, MEV de Araujo, RS Gates, PC Correa, MCTR Vidigal, AC Neisse - Journal of Food Process Engineering [https://onlinelibrary.wiley.com/doi/abs/10.1111/jfpe.13820](https://onlinelibrary.wiley.com/doi/abs/10.1111/jfpe.13820)
+
+# 2021
+
+ - **Chronic fatigue syndrome and its relation with absenteeism: elastic-net and stepwise applied to biochemical and anthropometric clinical measurements**. AC Neisse, FLP Oliveira, ACS Oliveira, FRB Cruz, RM Nascimento Neto - Brazilian Journal of Biometrics [http://www.biometria.ufla.br/index.php/BBJ/article/view/533/298](http://www.biometria.ufla.br/index.php/BBJ/article/view/533/298)
+
+# 2020
+
+ - **Análise de sobrevivência aplicada ao trancamento de matrícula no curso de graduação em estatística de uma universidade federal**. JL Kirch, AC Neisse, TCMA Veloso - E&S Engineering and Science [https://periodicoscientificos.ufmt.br/ojs/index.php/eng/article/view/7030](https://periodicoscientificos.ufmt.br/ojs/index.php/eng/article/view/7030)
+
+# 2018
+
+ - **AMMI and GGE Biplot for genotype× environment interaction: a medoid–based hierarchical cluster analysis approach for high–dimensional data**. AC Neisse, JL Kirch, K Hongyu - Biometrical Letters [https://sciendo.com/article/10.2478/bile-2018-0008](https://sciendo.com/article/10.2478/bile-2018-0008)
+
+# 2017
+
+ - **Variáveis Psicológicas e Desempenho Acadêmico: Uma Análise da Existência de Correlação Canônica**. AC Neisse, K Hongyu - E&S Engineering and Science. [https://periodicoscientificos.ufmt.br/ojs/index.php/eng/article/view/4577](https://periodicoscientificos.ufmt.br/ojs/index.php/eng/article/view/4577)
+
+# 2016
+
+ - **Aplicação de componentes principais e análise fatorial a dados criminais de 26 estados dos EUA**. AC Neisse, K Hongyu - E&S Engineering and Science. [https://periodicoscientificos.ufmt.br/ojs/index.php/eng/article/view/4354](https://periodicoscientificos.ufmt.br/ojs/index.php/eng/article/view/4354)

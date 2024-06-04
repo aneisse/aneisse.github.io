@@ -1,0 +1,16 @@
+{
+  "hash": "f0baba02085ed37b0fde89edbda0d94c",
+  "result": {
+    "markdown": "---\ntoc: true\ntitle: DataSciMT Community\nsubtitle: A Data Science discussion community to stimulate the growth of the Data Science in the state of Mato Grosso, Brazil. \nlinks:\n    - icon: youtube\n      icon_pack: fab\n      name: Videos\n      url: https://www.youtube.com/@DataSciMT/streams\n    - icon: github\n      icon_pack: fab\n      name: Github\n      url: https://github.com/datasci-mt\ntags:\n- Data Science\nimage: featured.jpg\nformat: html\n---\n\n\nThe DataSciMT is an idea that me and my fellow Statistician [Rodrigo Oliveira](https://rsoliveira.com/) came up with when we realized that our state, Mato Grosso (Brazil), is full of missed opportunities for Data Science to be applied. So we came up with a discussion community aiming to promote meetups and, most recently, lives in YouTube where we discuss the topics and use cases of Data Science and its various applications.\n\nAt the beginning, in November 2019, we hosted local meetups to promote networking and exchange knowledge and experience inviting Data Science enthusiasts to delve in such a tremendously interesting field. Since it focuses on the development of the local community all contents are primarily in Portuguese (pt-BR).\n\n\n<script src=\"https://kit.fontawesome.com/1bb720cc6f.js\" crossorigin=\"anonymous\"></script><h2> Materials</h2> <br><center><a href='https://www.youtube.com/@DataSciMT/streams' target='_blank' rel='noopener'><button class='btn btn-primary' style='margin: 10px;'><i class='fa-brands fa-youtube'></i> Videos</a></button>  <a href='https://github.com/datasci-mt' target='_blank' rel='noopener'><button class='btn btn-primary' style='margin: 10px;'><i class='fa-brands fa-github'></i> Github</a></button>  <br><br><img src='featured.jpg' class='img-fluid quarto-figure-center' style='max-width:80%'><br></center>",
+    "supporting": [
+      "datasci_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
