@@ -1,0 +1,25 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/20190222-lyrics-scraping/index.html",
+      "/posts/20180102-r4ds-slack-group/index.html",
+      "/projects/DataSci/datasci.html",
+      "/projects/Lyrics Scraping/lyrics-scraping.html"
+    ]
+  },
+  {
+    "listing": "/projects.html",
+    "items": [
+      "/projects/DataSci/datasci.html",
+      "/projects/Lyrics Scraping/lyrics-scraping.html"
+    ]
+  },
+  {
+    "listing": "/posts.html",
+    "items": [
+      "/posts/20190222-lyrics-scraping/index.html",
+      "/posts/20180102-r4ds-slack-group/index.html"
+    ]
+  }
+]
