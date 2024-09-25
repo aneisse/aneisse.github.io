@@ -4,6 +4,9 @@ title: "Papers"
 
 Check out my published papers in this section. You could also check them and its citations at my [**Google Scholar Profile**](https://scholar.google.com/citations?user=DD7V1NMAAAAJ&hl=en).
 
+# 2024
+
+ - **Supporting Environmental Decision-Making in Urban Water and Wastewater Systems: Proposal for an Environmental Performance Index**. MTN Boldrin, AC Neisse, KTM Formiga - Water Resources Management [https://link.springer.com/article/10.1007/s11269-024-03979-6](https://link.springer.com/article/10.1007/s11269-024-03979-6)
 
 # 2022
 
