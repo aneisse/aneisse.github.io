@@ -46,7 +46,7 @@ I am a statistician with a masters in applied statistics and biometrics who love
 ::: {.panel-tabset}
 ## Education
 
-Federal University of Mato Grosso | Viçosa, MG - Brazil <br>
+Federal University of Viçosa | Viçosa, MG - Brazil <br>
 **Msc in Applied Statistics and Biometrics** | 2018 - 2019
 
 Federal University of Mato Grosso | Cuiabá, MT - Brazil <br>
